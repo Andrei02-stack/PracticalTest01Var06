@@ -1,5 +1,6 @@
 package ro.pub.cs.systems.eim.practicaltest01var06;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -13,6 +14,9 @@ import java.util.Random;
 
 public class PracticalTest01Var06MainActivity extends AppCompatActivity {
 
+    private int score = 0;
+
+    private static final int REQUEST_CODE = 1;
     private EditText number1EditText;
     private EditText number2EditText;
     private EditText number3EditText;
@@ -20,6 +24,7 @@ public class PracticalTest01Var06MainActivity extends AppCompatActivity {
     private CheckBox checkbox2;
     private CheckBox checkbox3;
     private Button playButton;
+    private Button computeButton;
     private Random random;
 
     private static final String TAG = "PracticalTest01Var06";
@@ -38,11 +43,11 @@ public class PracticalTest01Var06MainActivity extends AppCompatActivity {
         checkbox2 = findViewById(R.id.checkbox2);
         checkbox3 = findViewById(R.id.checkbox3);
         playButton = findViewById(R.id.play_button);
+        computeButton = findViewById(R.id.compute_button);
         random = new Random();
 
         // Setarea listener-ului pentru butonul "Play"
         playButton.setOnClickListener(v -> {
-            // Generare numere aleatoare din {1, 2, 3, *} și suprascriere doar dacă checkbox-ul NU este bifat
             if (!checkbox1.isChecked()) {
                 number1EditText.setText(getRandomValue());
             }
@@ -61,9 +66,29 @@ public class PracticalTest01Var06MainActivity extends AppCompatActivity {
             Toast.makeText(PracticalTest01Var06MainActivity.this, result, Toast.LENGTH_SHORT).show();
             Log.d(TAG, result);
         });
+
+        // Setarea listener-ului pentru butonul "Compute"
+        computeButton.setOnClickListener(v -> {
+            // Crearea intenției pentru a lansa activitatea secundară
+            Intent intent = new Intent(PracticalTest01Var06MainActivity.this, PracticalTest01Var06SecondaryActivity.class);
+            intent.putExtra("numbers", new String[]{
+                    number1EditText.getText().toString(),
+                    number2EditText.getText().toString(),
+                    number3EditText.getText().toString()
+            });
+
+            // Calcularea numărului de checkbox-uri bifate
+            int checkboxCount = 0;
+            if (checkbox1.isChecked()) checkboxCount++;
+            if (checkbox2.isChecked()) checkboxCount++;
+            if (checkbox3.isChecked()) checkboxCount++;
+            intent.putExtra("checkboxCount", checkboxCount);
+
+            // Lansarea activității
+            startActivity(intent);
+        });
     }
 
-    // Metodă pentru a returna un număr aleatoriu din setul {1, 2, 3, *}
     private String getRandomValue() {
         return POSSIBLE_VALUES[random.nextInt(POSSIBLE_VALUES.length)];
     }
