@@ -28,13 +28,19 @@ public class PracticalTest01Var06SecondaryActivity extends AppCompatActivity {
             int checkboxCount = intent.getIntExtra("checkboxCount", 0);
 
             // Verificarea numerelor și afișarea rezultatului
+            int gain = 0;
             if (areNumbersEqual(numbers)) {
-                int gain = calculateGain(checkboxCount);
+                gain = calculateGain(checkboxCount);
                 resultTextView.setText("Gained " + gain);
                 Toast.makeText(this, "Gained " + gain, Toast.LENGTH_SHORT).show();
             } else {
                 resultTextView.setText("No gain");
             }
+
+            // Pregătirea intenției pentru a trimite câștigul înapoi la activitatea principală
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("gain", gain);
+            setResult(RESULT_OK, resultIntent);
         }
 
         // Închidere activitate la apăsarea butonului OK
@@ -66,4 +72,3 @@ public class PracticalTest01Var06SecondaryActivity extends AppCompatActivity {
         }
     }
 }
-

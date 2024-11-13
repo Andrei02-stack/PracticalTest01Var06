@@ -77,16 +77,29 @@ public class PracticalTest01Var06MainActivity extends AppCompatActivity {
                     number3EditText.getText().toString()
             });
 
-            // Calcularea numărului de checkbox-uri bifate
+            // Calcularea numărului de checkbox-uri
             int checkboxCount = 0;
             if (checkbox1.isChecked()) checkboxCount++;
             if (checkbox2.isChecked()) checkboxCount++;
             if (checkbox3.isChecked()) checkboxCount++;
             intent.putExtra("checkboxCount", checkboxCount);
 
-            // Lansarea activității
-            startActivity(intent);
+            // Lansarea activității secundare pentru rezultat
+            startActivityForResult(intent, REQUEST_CODE);
         });
+    }
+
+    // Suprascrierea metodei pentru a prelua rezultatul din activitatea secundară
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            if (data != null && data.hasExtra("gain")) {
+                int gain = data.getIntExtra("gain", 0);
+                score += gain;
+                Toast.makeText(this, "Total score: " + score, Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private String getRandomValue() {
